@@ -45,21 +45,3 @@ resource "aws_security_group" "blog" {
   description = " Allow HTTP/HTTPS inbound. Allow everything out"
   vpc_id = data.aws_vpc.default.id
 }
-
-resource "aws_security_group_rule" "blog_http_in" {
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  cidr_blocks       = ["0.0.0.0/0"]
-  protocol          = "tcp"
-  security_group_id = aws_security_group.blog.id
-}
-
-resource "aws_security_group_rule" "blog_http_out" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.blog.id
-}
