@@ -35,8 +35,8 @@ module "blog_sg" {
   ingress_rule       = ["http-80-tcp", "https-443-tcp"]
   ingress_cidr_block = ["0.0.0.0/0"]
 
-  ingress_rule       = ["all-all"]
-  ingress_cidr_block = ["0.0.0.0/0"]
+  egress_rule       = ["all-all"]
+  egress_cidr_block = ["0.0.0.0/0"]
    
 }
 
@@ -44,4 +44,22 @@ resource "aws_security_group" "blog" {
   name = "blog"
   description = " Allow HTTP/HTTPS inbound. Allow everything out"
   vpc_id = data.aws_vpc.default.id
+}
+
+resource "aws_security_group_rule" "blog_http_in" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  cidr_blocks       = ["0.0.0.0/0"]
+  protocol          = "tcp"
+  security_group_id = aws_security_group.blog.id
+}
+
+resource "aws_security_group_rule" "blog_http_out" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.blog.id
 }
